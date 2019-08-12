@@ -41,7 +41,9 @@ http://www.springframework.org/schema/context/spring-context.xsd">
         <!--使用了的通用Mapper；需要被上面扫描到的Mapper继承-->
         <property name="properties">
             <value>
-                mappers=tk.mybatis.mapper.common.Mapper
+                mappers=tk.mybatis.mapper.common.Mapper,
+                tk.mybatis.mapper.additional.insert.InsertListMapper,
+                tk.mybatis.mapper.common.ids.DeleteByIdsMapper
             </value>
         </property>
     </bean>

@@ -3,6 +3,7 @@ package com.pinyougou.mapper;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbBrand;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -117,5 +119,36 @@ public class BrandMapperTest {
         for (TbBrand tbBrand : pageInfo.getList()) {
             System.out.println(tbBrand);
         }
+    }
+
+    //批量新增
+    @Test
+    public void insertList() {
+        //选择性新增；如果传递的对象属性是有值的则会出现在insert语句中，没有赋值的则不会出现
+        //insert into tb_brand(id, name) values(?, ?);
+        TbBrand brand1 = new TbBrand();
+        brand1.setName("test1");
+        brand1.setFirstChar("T");
+
+        TbBrand brand2 = new TbBrand();
+        brand2.setName("test2");
+        brand2.setFirstChar("T");
+
+        List<TbBrand> list = new ArrayList<>();
+        list.add(brand1);
+        list.add(brand2);
+
+        brandMapper.insertList(list);
+    }
+
+    //批量删除
+    @Test
+    public void deleteByIds() {
+        Long[] ids = {24L, 25L};
+
+        //将数组的每个元素使用 , 连接
+        String idsStr = StringUtils.join(ids, ",");
+
+        brandMapper.deleteByIds(idsStr);
     }
 }
