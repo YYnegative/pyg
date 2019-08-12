@@ -13,6 +13,7 @@
     <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
     <script src="../js/vuejs-2.5.16.js"></script>
     <script src="../js/axios-0.18.0.js"></script>
+    <script src="../js/pagination.js"></script>
 
 
 </head>
@@ -71,16 +72,16 @@
 
 			                      </tbody>
 			                  </table>
-			                  <!--数据列表/-->                        
-							  
-							 
+			                  <!--数据列表/-->
+
                         </div>
                         <!-- 数据表格 /-->
-                        
-                        
-                        
-                        
-                     </div>
+                        <!-- 分页导航条 -->
+                        <navigation :total="total" :pageSize="pageSize" :current.sync="pageNum" @navpage="searchList"></navigation>
+
+
+
+                    </div>
                     <!-- /.box-body -->
          
 <!-- 编辑窗口 -->
@@ -116,18 +117,39 @@
         el:"#app",
         data: {
             //数据列表
-            entityList:[]
+            entityList:[],
+            //总记录数
+            total: 0,
+            //页大小
+            pageSize: 10,
+            //当前页号
+            pageNum: 1
+
         },
         methods :{
-            //
+            //查询方法
+            searchList: function (curPage) {
+                this.pageNum = curPage;
+
+                axios.get("../brand/findPage.do?pageNum=" + this.pageNum + "&pageSize=" + this.pageSize).then(function (response) {
+                    //设置总记录数
+                    app.total = response.data.total;
+                    //设置列表
+                    app.entityList = response.data.list;
+                });
+
+            }
         },
         created() {
             //加载品牌数据
+/*
             axios.get("../brand/findAll.do").then(function (response) {
                 console.log(response);
                 //因为在axios的回调方法中this表示窗口window，不是vue对象；app 是vue对象对应的变量名称
                 app.entityList = response.data;
             });
+*/
+            this.searchList(1);
         }
     });
 </script>
