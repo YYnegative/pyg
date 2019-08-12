@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
-public class BrandServiceImpl implements BrandService {
+public class BrandServiceImpl extends BaseServiceImpl<TbBrand> implements BrandService {
 
     @Autowired
     private BrandMapper brandMapper;
