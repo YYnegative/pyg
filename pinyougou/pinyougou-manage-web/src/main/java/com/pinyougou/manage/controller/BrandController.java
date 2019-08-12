@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 public class BrandController {
 
-    @Reference
+    @Reference(timeout = 3000)
     private BrandService brandService;
 
     /**
