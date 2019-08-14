@@ -4,10 +4,8 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbBrand;
 import com.pinyougou.sellergoods.service.BrandService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import com.pinyougou.vo.Result;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +15,23 @@ public class BrandController {
 
     @Reference(timeout = 3000)
     private BrandService brandService;
+
+    /**
+     * 新增品牌
+     * @param brand 品牌
+     * @return 操作结果
+     */
+    @PostMapping("/add")
+    public Result add(@RequestBody TbBrand brand){
+        try {
+            brandService.add(brand);
+
+            return Result.ok("新增品牌成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("新增品牌失败！");
+    }
 
     /**
      * 根据分页参数分页查询分页信息
