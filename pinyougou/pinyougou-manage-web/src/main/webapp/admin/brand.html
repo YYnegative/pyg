@@ -40,8 +40,11 @@
                 </div>
             </div>
             <div class="box-tools pull-right">
+                {{searchEntity}}
                 <div class="has-feedback">
-                    {{ids}}
+                    品牌名称：<input v-model="searchEntity.name">
+                    品牌首字母：<input v-model="searchEntity.firstChar">
+                    <button @click="searchList(1)" type="button" class="btn btn-default" title="搜索" ><i class="fa fa-refresh"></i> 搜索</button>
                 </div>
             </div>
             <!--工具栏/-->
@@ -126,7 +129,9 @@
             //数据
             entity: {},
             //要删除的id数组
-            ids: []
+            ids: [],
+            //搜索条件
+            searchEntity:{}
 
         },
         methods: {
@@ -174,7 +179,13 @@
             searchList: function (curPage) {
                 this.pageNum = curPage;
 
-                axios.get("../brand/findPage.do?pageNum=" + this.pageNum + "&pageSize=" + this.pageSize).then(function (response) {
+                /*axios.get("../brand/findPage.do?pageNum=" + this.pageNum + "&pageSize=" + this.pageSize).then(function (response) {
+                    //设置总记录数
+                    app.total = response.data.total;
+                    //设置列表
+                    app.entityList = response.data.list;
+                });*/
+                axios.post("../brand/search.do?pageNum=" + this.pageNum + "&pageSize="+this.pageSize, this.searchEntity).then(function (response) {
                     //设置总记录数
                     app.total = response.data.total;
                     //设置列表

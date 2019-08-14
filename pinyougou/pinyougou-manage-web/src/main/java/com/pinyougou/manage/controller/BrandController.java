@@ -112,4 +112,18 @@ public class BrandController {
         //return brandService.queryAll();
         return brandService.findAll();
     }
+
+    /**
+     * 根据条件分页查询
+     * @param pageNum 页号
+     * @param pageSize 页大小
+     * @param brand 查询条件对象
+     * @return 分页信息对象
+     */
+    @PostMapping("/search")
+    public PageInfo<TbBrand> search(@RequestParam(value = "pageNum", defaultValue = "1") Integer pageNum,
+                                    @RequestParam(value = "pageSize", defaultValue = "5") Integer pageSize,
+                                    @RequestBody TbBrand brand){
+        return brandService.search(pageNum, pageSize, brand);
+    }
 }
