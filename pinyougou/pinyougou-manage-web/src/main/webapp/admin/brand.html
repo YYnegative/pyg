@@ -34,14 +34,14 @@
                 <div class="form-group form-inline">
                     <div class="btn-group">
                         <button @click="entity={}" type="button" class="btn btn-default" title="新建" data-toggle="modal" data-target="#editModal"><i class="fa fa-file-o"></i> 新建</button>
-                        <button type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
+                        <button @click="deleteList()" type="button" class="btn btn-default" title="删除"><i class="fa fa-trash-o"></i> 删除</button>
                         <button type="button" class="btn btn-default" title="刷新" onclick="window.location.reload();"><i class="fa fa-refresh"></i> 刷新</button>
                     </div>
                 </div>
             </div>
             <div class="box-tools pull-right">
                 <div class="has-feedback">
-
+                    {{ids}}
                 </div>
             </div>
             <!--工具栏/-->
@@ -61,7 +61,7 @@
                 </thead>
                 <tbody>
                 <tr v-for="entity in entityList">
-                    <td><input type="checkbox"></td>
+                    <td><input :value="entity.id" v-model="ids" type="checkbox"></td>
                     <td>{{entity.id}}</td>
                     <td>{{entity.name}}</td>
                     <td>{{entity.firstChar}}</td>
@@ -124,10 +124,30 @@
             //当前页号
             pageNum: 1,
             //数据
-            entity: {}
+            entity: {},
+            //要删除的id数组
+            ids: []
 
         },
         methods: {
+            //删除
+            deleteList: function(){
+                if (this.ids.length == 0) {
+                    alert("请先选择之后再删除！");
+                    return;
+                }
+                //confirm 如果点击 确认则true，否则返回false
+                if (confirm("真的要删除选择了的那些记录吗？")) {
+                    axios.get("../brand/delete.do?ids=" + this.ids).then(function (respose) {
+                        if(respose.data.success){
+                            app.ids = [];
+                            app.searchList(1);
+                        } else {
+                            alert(respose.data.message);
+                        }
+                    });
+                }
+            },
             //根据id查询
             findOne: function (id) {
                 axios.get("../brand/findOne/" + id + ".do").then(function (response) {
@@ -141,7 +161,7 @@
                     method = "update";
                 }
 
-                axios.post("../brand/"+method+".do", this.entity).then(function (response) {
+                axios.post("../brand/" + method + ".do", this.entity).then(function (response) {
                     if (response.data.success) {
                         //刷新列表
                         app.searchList(1);
