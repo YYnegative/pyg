@@ -89,7 +89,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="myModalLabel">品牌编辑</h3>{{entity}}
+                    <h3 id="myModalLabel">品牌编辑</h3>
                 </div>
                 <div class="modal-body">
                     <table class="table table-bordered table-striped" width="800px">
@@ -136,7 +136,12 @@
             },
             //保存数据
             save: function () {
-                axios.post("../brand/add.do", this.entity).then(function (response) {
+                var method = "add";
+                if (this.entity.id != null) {
+                    method = "update";
+                }
+
+                axios.post("../brand/"+method+".do", this.entity).then(function (response) {
                     if (response.data.success) {
                         //刷新列表
                         app.searchList(1);
