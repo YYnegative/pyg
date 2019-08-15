@@ -8,12 +8,25 @@ import com.pinyougou.vo.Result;
 import com.pinyougou.vo.Specification;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
+
 @RequestMapping("/specification")
 @RestController
 public class SpecificationController {
 
     @Reference
     private SpecificationService specificationService;
+
+    /**
+     * 获取格式化的规格列表；格式为：[{id:'1',text:'屏幕尺寸'},{id:'2',text:'机身大小'}]
+     * @return 规格列表；格式为：[{id:'1',text:'屏幕尺寸'},{id:'2',text:'机身大小'}]
+     */
+    @GetMapping("/selectOptionList")
+    public List<Map<String, Object>> selectOptionList(){
+        return specificationService.selectOptionList();
+    }
+
 
     /**
      * 新增
