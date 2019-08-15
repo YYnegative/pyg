@@ -56,4 +56,22 @@ public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> i
         specificationOptionMapper.insertList(specification.getSpecificationOptionList());
     }
 
+    @Override
+    public Specification findSpecificationById(Long id) {
+        Specification specification = new Specification();
+
+        //-- 根据规格id查询规格
+        //select * from tb_specification where id = ?
+        specification.setSpecification(findOne(id));
+
+        //--根据规格id查询选项列表
+        //select * from tb_specification_option where spec_id=?
+        TbSpecificationOption param = new TbSpecificationOption();
+        param.setSpecId(id);
+        List<TbSpecificationOption> specificationOptionList = specificationOptionMapper.select(param);
+        specification.setSpecificationOptionList(specificationOptionList);
+
+        return specification;
+    }
+
 }
