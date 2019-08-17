@@ -14,10 +14,24 @@ var app = new Vue({
         //要删除的id数组
         ids: [],
         //搜索条件
-        searchEntity:{}
+        searchEntity:{},
+        //是否选中
+        selectedFlag: false
 
     },
     methods: {
+        //全选
+        selectAll: function(){
+          if(!this.selectedFlag){
+              //选中
+              for (let i = 0; i < this.entityList.length; i++) {
+                  const entity = this.entityList[i];
+                  this.ids[i] = entity.id;
+              }
+          } else {
+              this.ids = [];
+          }
+        },
         //删除
         deleteList: function(){
             if (this.ids.length == 0) {
@@ -75,6 +89,16 @@ var app = new Vue({
                 app.entityList = response.data.list;
             });
 
+        }
+    },
+    //监听数据属性的变化
+    watch :{
+        ids: function (newValue, oldValue) {
+            if (this.ids.length != this.entityList.length) {
+                this.selectedFlag = false;
+            } else{
+                this.selectedFlag = true;
+            }
         }
     },
     created() {
