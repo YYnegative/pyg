@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class SellerController {
 
-    @Reference
+    @Reference(timeout = 3000)
     private SellerService sellerService;
 
     /**
