@@ -21,7 +21,7 @@ http://www.springframework.org/schema/security/spring-security.xsd">
         <!--登录表单-->
         <form-login login-page="/login.html"
                     always-use-default-target="true"
-                    default-target-url="index.html"
+                    default-target-url="/index.html"
                     authentication-failure-url="/login_error.html"/>
 
         <!--禁止跨站请求访问-->
