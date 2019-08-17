@@ -51,7 +51,9 @@ http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.
     </http>
 
     <!--使用对密码不加密的加密算法-->
-    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>
+    <!--<beans:bean id="passwordEncoder" class="org.springframework.security.crypto.password.NoOpPasswordEncoder"/>-->
+    <!--使用bcrypt加密算法-->
+    <beans:bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
 
     <!--配置动态认证类-->
     <beans:bean id="userDetailServiceImpl" class="com.pinyougou.shop.service.impl.UserDetailServiceImpl"/>
