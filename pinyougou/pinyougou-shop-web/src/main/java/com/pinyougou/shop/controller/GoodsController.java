@@ -4,6 +4,7 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
 import com.pinyougou.sellergoods.service.GoodsService;
+import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,19 +17,19 @@ public class GoodsController {
 
     /**
      * 新增
-     * @param goods 实体
+     * @param goods 商品信息（基本、描述、sku列表）
      * @return 操作结果
      */
     @PostMapping("/add")
-    public Result add(@RequestBody TbGoods goods){
+    public Result add(@RequestBody Goods goods){
         try {
-            goodsService.add(goods);
+            goodsService.addGoods(goods);
 
-            return Result.ok("新增成功");
+            return Result.ok("新增商品成功");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Result.fail("新增失败");
+        return Result.fail("新增商品失败");
     }
 
     /**
