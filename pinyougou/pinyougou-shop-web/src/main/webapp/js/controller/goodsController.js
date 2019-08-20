@@ -129,7 +129,7 @@ var goodsControllerMixin = {
             //查看当前的规格是否已经选择过
             var specObj = this.findObjectByKeyAndValue(this.entity.goodsDesc.specificationItems, "attributeName", specName);
             if (specObj != null) {
-                if (event.target.checked) {
+                if (event.target.checked) {//表示规格选项被选中
                     specObj.attributeValue.push(optionName);
                 } else {
                     var optIndex = specObj.attributeValue.indexOf(optionName);
