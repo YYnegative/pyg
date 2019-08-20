@@ -68,49 +68,90 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         goodsDescMapper.insertSelective(goods.getGoodsDesc());
 
         //保存商品sku列表
-        if (goods.getItemList() != null && goods.getItemList().size() > 0) {
-            for (TbItem tbItem : goods.getItemList()) {
+        saveItemList(goods);
+    }
 
-                //标题：spu商品名称+当前这个sku的所有规格选项值拼接而成
-                String title = goods.getGoods().getGoodsName();
-                //将规格转换为对象，然后将其属性值拼接到标题中
-                Map<String, String> specMap = JSON.parseObject(tbItem.getSpec(), Map.class);
-                for (Map.Entry<String, String> entry : specMap.entrySet()) {
-                    title += " " + entry.getValue();
-                }
-                tbItem.setTitle(title);
+    /**
+     * 保存商品sku
+     * @param goods 商品信息（基本、描述、sku列表）
+     */
+    private void saveItemList(Goods goods) {
+        if ("1".equals(goods.getGoods().getIsEnableSpec())) {
+            //启用规格
+            if (goods.getItemList() != null && goods.getItemList().size() > 0) {
+                for (TbItem tbItem : goods.getItemList()) {
 
-                //图片，获取spu的第1张图片
-                if (StringUtils.isNotBlank(goods.getGoodsDesc().getItemImages())) {
-                    List<Map> imageList = JSON.parseArray(goods.getGoodsDesc().getItemImages(), Map.class);
-                    if (imageList != null && imageList.size() > 0) {
-                        tbItem.setImage(imageList.get(0).get("url").toString());
+                    //标题：spu商品名称+当前这个sku的所有规格选项值拼接而成
+                    String title = goods.getGoods().getGoodsName();
+                    //将规格转换为对象，然后将其属性值拼接到标题中
+                    Map<String, String> specMap = JSON.parseObject(tbItem.getSpec(), Map.class);
+                    for (Map.Entry<String, String> entry : specMap.entrySet()) {
+                        title += " " + entry.getValue();
                     }
+                    tbItem.setTitle(title);
+
+                    setItemValue(tbItem, goods);
+
+                    //保存商品sku
+                    itemMapper.insertSelective(tbItem);
                 }
+            }
 
-                tbItem.setGoodsId(goods.getGoods().getId());
-                //未审核
-                tbItem.setStatus("0");
-                //商家
-                TbSeller seller = sellerMapper.selectByPrimaryKey(goods.getGoods().getSellerId());
-                tbItem.setSellerId(seller.getSellerId());
-                tbItem.setSeller(seller.getName());
-                //品牌
-                TbBrand brand = brandMapper.selectByPrimaryKey(goods.getGoods().getBrandId());
-                tbItem.setBrand(brand.getName());
+        } else {
+            //不启用规格；默认基于spu生成一条sku商品
+            TbItem tbItem = new TbItem();
+            //价格
+            tbItem.setPrice(goods.getGoods().getPrice());
+            //库存
+            tbItem.setNum(9999);
+            //是否启用；不启用
+            tbItem.setStatus("0");
+            //是否默认
+            tbItem.setIsDefault("1");
+            //规格
+            tbItem.setSpec("{}");
 
-                //分类;使用商品spu中的第3级商品分类
-                TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(goods.getGoods().getCategory3Id());
-                tbItem.setCategoryid(itemCat.getId());
-                tbItem.setCategory(itemCat.getName());
+            tbItem.setTitle(goods.getGoods().getGoodsName());
 
-                tbItem.setCreateTime(new Date());
-                tbItem.setUpdateTime(tbItem.getCreateTime());
+            setItemValue(tbItem, goods);
 
-                //保存商品sku
-                itemMapper.insertSelective(tbItem);
+            itemMapper.insertSelective(tbItem);
+        }
+    }
+
+    /**
+     * 设置sku商品信息
+     * @param tbItem sku
+     * @param goods vo商品信息
+     */
+    private void setItemValue(TbItem tbItem, Goods goods) {
+        //图片，获取spu的第1张图片
+        if (StringUtils.isNotBlank(goods.getGoodsDesc().getItemImages())) {
+            List<Map> imageList = JSON.parseArray(goods.getGoodsDesc().getItemImages(), Map.class);
+            if (imageList != null && imageList.size() > 0) {
+                tbItem.setImage(imageList.get(0).get("url").toString());
             }
         }
+
+        tbItem.setGoodsId(goods.getGoods().getId());
+        //未审核
+        tbItem.setStatus("0");
+        //商家
+        TbSeller seller = sellerMapper.selectByPrimaryKey(goods.getGoods().getSellerId());
+        tbItem.setSellerId(seller.getSellerId());
+        tbItem.setSeller(seller.getName());
+        //品牌
+        TbBrand brand = brandMapper.selectByPrimaryKey(goods.getGoods().getBrandId());
+        tbItem.setBrand(brand.getName());
+
+        //分类;使用商品spu中的第3级商品分类
+        TbItemCat itemCat = itemCatMapper.selectByPrimaryKey(goods.getGoods().getCategory3Id());
+        tbItem.setCategoryid(itemCat.getId());
+        tbItem.setCategory(itemCat.getName());
+
+        tbItem.setCreateTime(new Date());
+        tbItem.setUpdateTime(tbItem.getCreateTime());
+
     }
 
 }
