@@ -41,4 +41,9 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @param status 商品的审核状态
      */
     void updateStatus(Long[] ids, String status);
+    /**
+     * 根据主键数组批量更新删除标识
+     * @param ids 主键数组
+     */
+    void deleteGoodsByIds(Long[] ids);
 }
