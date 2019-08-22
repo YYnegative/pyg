@@ -17,6 +17,23 @@ public class GoodsController {
     private GoodsService goodsService;
 
     /**
+     * 批量修改商品审核状态
+     * @param ids 商品spu id数组
+     * @param status 商品的审核状态
+     * @return 操作结果
+     */
+    @GetMapping("/updateStatus")
+    public Result updateStatus(Long[] ids, String status){
+        try {
+            goodsService.updateStatus(ids, status);
+            return Result.ok("修改商品状态成功！");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Result.fail("修改商品状态失败！");
+    }
+
+    /**
      * 新增
      * @param goods 商品信息（基本、描述、sku列表）
      * @return 操作结果
@@ -27,6 +44,8 @@ public class GoodsController {
             //设置卖家
             String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
             goods.getGoods().setSellerId(sellerId);
+            //未审核
+            goods.getGoods().setAuditStatus("0");
             goodsService.addGoods(goods);
 
             return Result.ok("新增商品成功");

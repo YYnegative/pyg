@@ -35,4 +35,10 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @param goods 商品信息（基本、描述、sku列表）
      */
     void updateGoods(Goods goods);
+    /**
+     * 批量修改商品审核状态
+     * @param ids 商品spu id数组
+     * @param status 商品的审核状态
+     */
+    void updateStatus(Long[] ids, String status);
 }

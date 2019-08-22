@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -117,6 +118,19 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         itemMapper.delete(param);
         //新增商品sku列表
         saveItemList(goods);
+    }
+
+    @Override
+    public void updateStatus(Long[] ids, String status) {
+        //根据商品spu id数组批量修改商品spu的审核状态
+        //update tb_goods set audit_status = ? where id in (?, ?,? )
+        //要更新的数据
+        TbGoods tbGoods = new TbGoods();
+        tbGoods.setAuditStatus(status);
+        //更新条件
+        Example example = new Example(TbGoods.class);
+        example.createCriteria().andIn("id", Arrays.asList(ids));
+        goodsMapper.updateByExampleSelective(tbGoods, example);
     }
 
     /**
