@@ -16,6 +16,15 @@ public class ItemCatController {
     @Reference
     private ItemCatService itemCatService;
 
+    /**
+     * 查询所有的商品分类
+     * @return 商品分类列表
+     */
+    @GetMapping("/findAll")
+    public List<TbItemCat> findAll(){
+        return itemCatService.findAll();
+    }
+
 
     /**
      * 根据商品分类父分类id查询其子分类列表

@@ -48,10 +48,21 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         //创建查询条件对象
         Example.Criteria criteria = example.createCriteria();
 
-        //模糊查询
-        /**if (StringUtils.isNotBlank(goods.getProperty())) {
-            criteria.andLike("property", "%" + goods.getProperty() + "%");
-        }*/
+        //商家id
+        if (StringUtils.isNotBlank(goods.getSellerId())) {
+            criteria.andEqualTo("sellerId", goods.getSellerId());
+        }
+
+        //商品状态
+        if (StringUtils.isNotBlank(goods.getAuditStatus())) {
+            criteria.andEqualTo("auditStatus", goods.getAuditStatus());
+        }
+
+
+        //商品名称模糊查询
+        if (StringUtils.isNotBlank(goods.getGoodsName())) {
+            criteria.andLike("goodsName", "%" + goods.getGoodsName() + "%");
+        }
 
         List<TbGoods> list = goodsMapper.selectByExample(example);
         return new PageInfo<>(list);
