@@ -48,13 +48,21 @@ public class GoodsController {
 
     /**
      * 修改
-     * @param goods 实体
+     * @param goods 商品信息（基本、描述、sku列表）
      * @return 操作结果
      */
     @PostMapping("/update")
-    public Result update(@RequestBody TbGoods goods){
+    public Result update(@RequestBody Goods goods){
         try {
-            goodsService.update(goods);
+            //查询原来的商品商家
+            TbGoods oldGoods = goodsService.findOne(goods.getGoods().getId());
+
+            String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
+
+            if (!oldGoods.getSellerId().equals(sellerId)) {
+                return Result.ok("非法操作");
+            }
+            goodsService.updateGoods(goods);
             return Result.ok("修改成功");
         } catch (Exception e) {
             e.printStackTrace();
