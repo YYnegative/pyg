@@ -79,7 +79,7 @@ public class GoodsController {
             String sellerId = SecurityContextHolder.getContext().getAuthentication().getName();
 
             if (!oldGoods.getSellerId().equals(sellerId)) {
-                return Result.ok("非法操作");
+                return Result.fail("非法操作");
             }
             goodsService.updateGoods(goods);
             return Result.ok("修改成功");
