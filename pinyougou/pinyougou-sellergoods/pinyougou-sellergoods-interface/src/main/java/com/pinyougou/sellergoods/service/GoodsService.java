@@ -22,4 +22,11 @@ public interface GoodsService extends BaseService<TbGoods> {
      * @param goods 商品信息（基本、描述、sku列表）
      */
     void addGoods(Goods goods);
+
+    /**
+     * 根据主键查询商品vo
+     * @param id 主键
+     * @return 商品vo（基本、描述、sku列表）
+     */
+    Goods findGoodsById(Long id);
 }

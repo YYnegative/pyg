@@ -37,13 +37,13 @@ public class GoodsController {
     }
 
     /**
-     * 根据主键查询
+     * 根据主键查询商品vo
      * @param id 主键
-     * @return 实体
+     * @return 商品vo（基本、描述、sku列表）
      */
     @GetMapping("/findOne/{id}")
-    public TbGoods findOne(@PathVariable Long id){
-        return goodsService.findOne(id);
+    public Goods findOne(@PathVariable Long id){
+        return goodsService.findGoodsById(id);
     }
 
     /**
