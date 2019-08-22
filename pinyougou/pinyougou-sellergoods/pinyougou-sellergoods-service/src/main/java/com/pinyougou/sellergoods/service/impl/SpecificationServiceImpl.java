@@ -12,12 +12,14 @@ import com.pinyougou.service.impl.BaseServiceImpl;
 import com.pinyougou.vo.Specification;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+@Transactional
 @Service
 public class SpecificationServiceImpl extends BaseServiceImpl<TbSpecification> implements SpecificationService {
 
