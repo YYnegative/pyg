@@ -8,6 +8,7 @@ var app = new Vue({
         //根据内容分类id查询内容列表
         findContentListByCategoryId: function (categoryId) {
             axios.get("../content/findContentListByCategoryId.do?categoryId=" + categoryId).then(function (response) {
+                //内容列表
                 app.contentData[categoryId] = response.data;
             });
 

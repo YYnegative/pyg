@@ -38,4 +38,26 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
         return new PageInfo<>(list);
     }
 
+    @Override
+    public List<TbContent> findContentListByCategoryId(Long categoryId) {
+        List<TbContent> contentList = null;
+
+        /**
+         * -- 查询有效，内容分类为 轮播广告 的内容并根据排序字段降序排序
+         * select * from tb_content where status='1' and category_id=? order by sort_roder desc
+         */
+        Example example = new Example(TbContent.class);
+
+        example.createCriteria()
+                .andEqualTo("status", "1")
+                .andEqualTo("categoryId", categoryId);
+
+        //设置排序
+        example.orderBy("sortOrder").desc();
+
+        contentList = contentMapper.selectByExample(example);
+
+        return contentList;
+    }
+
 }
