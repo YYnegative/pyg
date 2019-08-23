@@ -9,6 +9,7 @@ import com.pinyougou.content.service.ContentService;
 import com.pinyougou.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -16,8 +17,14 @@ import java.util.List;
 @Service
 public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements ContentService {
 
+    //内容列表在redis中的键名
+    private static final String REDIS_CONTENT = "CONTNET_LIST";
+
     @Autowired
     private ContentMapper contentMapper;
+
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     @Override
     public PageInfo<TbContent> search(Integer pageNum, Integer pageSize, TbContent content) {
@@ -42,6 +49,16 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
     public List<TbContent> findContentListByCategoryId(Long categoryId) {
         List<TbContent> contentList = null;
 
+        try {
+            //查询redis中是否存在分类对应的内容列表
+            contentList = (List<TbContent>) redisTemplate.boundHashOps(REDIS_CONTENT).get(categoryId);
+            if (contentList != null && contentList.size() > 0) {
+                return contentList;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         /**
          * -- 查询有效，内容分类为 轮播广告 的内容并根据排序字段降序排序
          * select * from tb_content where status='1' and category_id=? order by sort_roder desc
@@ -56,6 +73,13 @@ public class ContentServiceImpl extends BaseServiceImpl<TbContent> implements Co
         example.orderBy("sortOrder").desc();
 
         contentList = contentMapper.selectByExample(example);
+
+        try {
+            //将内容列表存入到redis
+            redisTemplate.boundHashOps(REDIS_CONTENT).put(categoryId, contentList);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return contentList;
     }
