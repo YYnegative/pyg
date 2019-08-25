@@ -48,6 +48,21 @@ public class ElasticSearchTest {
 
         itemDao.save(item);
     }
+
+    //查询全部
+    @Test
+    public void findAll(){
+        Iterable<TbItem> itemList = itemDao.findAll();
+        for (TbItem tbItem : itemList) {
+            System.out.println(tbItem);
+        }
+    }
+
+    //根据id删除
+    @Test
+    public void deleteById(){
+        itemDao.deleteById(100003344497L);
+    }
 }
 
 
