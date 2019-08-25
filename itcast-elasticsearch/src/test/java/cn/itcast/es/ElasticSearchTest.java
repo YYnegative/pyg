@@ -121,6 +121,35 @@ public class ElasticSearchTest {
             System.out.println(item);
         }
     }
+
+
+    //复制域；相当于查询复制域对应的 来源域
+    @Test
+    public void copyFieldQuery(){
+
+        //在spring data es中所有的对象几乎都有一个自身的构造对象
+
+        //查询构造对象
+        NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
+
+        //设置查询条件对象
+        queryBuilder.withQuery(QueryBuilders.wildcardQuery("keywords", "拍*"));
+
+        //构造查询对象
+        NativeSearchQuery query = queryBuilder.build();
+
+        //搜索
+        AggregatedPage<TbItem> aggregatedPage = esTemplate.queryForPage(query, TbItem.class);
+
+        //分页信息
+        System.out.println("总记录数为：" + aggregatedPage.getTotalElements());
+        System.out.println("总页数为：" + aggregatedPage.getTotalPages());
+
+        for (TbItem item : aggregatedPage.getContent()) {
+            System.out.println(item);
+        }
+    }
+
 }
 
 
