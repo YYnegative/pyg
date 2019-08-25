@@ -327,8 +327,7 @@
 											<i>{{item.price.toFixed(2)}}</i>
 										</strong>
 								</div>
-								<div class="attr" style="height: auto">
-									<em>{{item.title}}</em>
+								<div v-html="item.title" class="attr" style="height: auto">
 								</div>
 								<div class="attr" style="height: auto">
 									<em>商家：{{item.seller}}</em>
