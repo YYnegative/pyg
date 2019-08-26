@@ -211,4 +211,9 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             itemDao.saveAll(itemList);
         }
     }
+
+    @Override
+    public void deleteByGoodsIds(Long[] goodsIds) {
+        itemDao.deleteByGoodsIdIn(goodsIds);
+    }
 }

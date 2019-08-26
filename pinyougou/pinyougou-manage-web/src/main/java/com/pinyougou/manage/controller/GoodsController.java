@@ -112,6 +112,8 @@ public class GoodsController {
     public Result delete(Long[] ids){
         try {
             goodsService.deleteGoodsByIds(ids);
+            //同步更新搜索系统
+            itemSearchService.deleteByGoodsIds(ids);
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
