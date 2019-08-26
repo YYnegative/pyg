@@ -92,6 +92,22 @@ public class ItemSearchServiceImpl implements ItemSearchService {
                 }
             }
 
+            //价格
+            String price = searchMap.get("price")+"";
+            if (StringUtils.isNotBlank(price)) {
+                String[] prices = price.split("-");
+
+                //价格的下限
+                boolQueryBuilder.must(QueryBuilders.rangeQuery("price").gte(prices[0]));
+
+                //价格的上限
+                if(!"*".equals(prices[1])) {
+                    boolQueryBuilder.must(QueryBuilders.rangeQuery("price").lte(prices[1]));
+                }
+
+            }
+
+
             queryBuilder.withFilter(boolQueryBuilder);
         }
 
