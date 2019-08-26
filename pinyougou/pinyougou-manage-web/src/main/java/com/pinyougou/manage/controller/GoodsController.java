@@ -3,11 +3,15 @@ package com.pinyougou.manage.controller;
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbGoods;
+import com.pinyougou.pojo.TbItem;
+import com.pinyougou.search.service.ItemSearchService;
 import com.pinyougou.sellergoods.service.GoodsService;
 import com.pinyougou.vo.Goods;
 import com.pinyougou.vo.Result;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequestMapping("/goods")
 @RestController
@@ -15,6 +19,9 @@ public class GoodsController {
 
     @Reference
     private GoodsService goodsService;
+
+    @Reference
+    private ItemSearchService itemSearchService;
 
     /**
      * 批量修改商品审核状态
@@ -26,6 +33,13 @@ public class GoodsController {
     public Result updateStatus(Long[] ids, String status){
         try {
             goodsService.updateStatus(ids, status);
+            //审核通过，需要更新搜索系统数据
+            if ("2".equals(status)) {
+                //1、根据spu id数组查询已启用的商品数据
+                List<TbItem> itemList = goodsService.findGoodsByIdsAndStatus(ids, "1");
+                //2、调用搜索系统的业务对象导入数据到es中
+                itemSearchService.importItemList(itemList);
+            }
             return Result.ok("修改商品状态成功！");
         } catch (Exception e) {
             e.printStackTrace();

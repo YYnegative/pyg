@@ -168,6 +168,15 @@ public class GoodsServiceImpl extends BaseServiceImpl<TbGoods> implements GoodsS
         goodsMapper.updateByExampleSelective(tbGoods, example);
     }
 
+    @Override
+    public List<TbItem> findGoodsByIdsAndStatus(Long[] ids, String itemStatus) {
+        Example example = new Example(TbItem.class);
+        example.createCriteria()
+                .andEqualTo("status", itemStatus)
+                .andIn("goodsId", Arrays.asList(ids));
+        return itemMapper.selectByExample(example);
+    }
+
     /**
      * 保存商品sku
      *

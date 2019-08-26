@@ -1,5 +1,8 @@
 package com.pinyougou.search.service;
 
+import com.pinyougou.pojo.TbItem;
+
+import java.util.List;
 import java.util.Map;
 
 public interface ItemSearchService {
@@ -9,4 +12,10 @@ public interface ItemSearchService {
      * @return 查询结果
      */
     Map<String, Object> search(Map<String, Object> searchMap);
+
+    /**
+     * 批量导入商品sku到es
+     * @param itemList 商品sku列表
+     */
+    void importItemList(List<TbItem> itemList);
 }

@@ -3,6 +3,7 @@ package com.pinyougou.search.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbItem;
+import com.pinyougou.search.dao.ItemDao;
 import com.pinyougou.search.service.ItemSearchService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.join.ScoreMode;
@@ -37,6 +38,9 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
     @Autowired
     private ElasticsearchTemplate esTemplate;
+
+    @Autowired
+    private ItemDao itemDao;
 
     @Override
     public Map<String, Object> search(Map<String, Object> searchMap) {
@@ -194,5 +198,17 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         resultMap.put("totalPages", aggregatedPage.getTotalPages());
 
         return resultMap;
+    }
+
+    @Override
+    public void importItemList(List<TbItem> itemList) {
+        //将每个sku 的spec字符串转换为一个map
+        if(itemList != null && itemList.size() > 0 ) {
+            for (TbItem tbItem : itemList) {
+                Map map = JSON.parseObject(tbItem.getSpec(), Map.class);
+                tbItem.setSpecMap(map);
+            }
+            itemDao.saveAll(itemList);
+        }
     }
 }
