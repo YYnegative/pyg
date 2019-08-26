@@ -6,9 +6,20 @@ var app = new Vue({
         //返回结果
         resultMap:{},
         //分页页号数组
-        pageNoList:[]
+        pageNoList:[],
+        //分页导航条前面3个点
+        frontDot:false,
+        //分页导航条后面3个点
+        backDot:false
     },
     methods:{
+        //根据页号查询
+        queryByPageNo: function(pageNo){
+            if(pageNo > 0 && pageNo <= this.resultMap.totalPages){
+                this.searchMap.pageNo = pageNo;
+                this.search();
+            }
+        },
         //删除过滤条件
         removeSearchItem: function(key){
             if ("category" == key || "brand" == key || "price" == key) {
@@ -22,6 +33,9 @@ var app = new Vue({
 
             }
 
+            //重置页号为1
+            this.searchMap.pageNo = 1;
+
             this.search();
         },
         //添加过滤条件
@@ -33,6 +47,9 @@ var app = new Vue({
                 //参数1：要设置的对象，参数2：设置的属性，参数3：属性对应的值
                 this.$set(this.searchMap.spec, key, value);
             }
+
+            //重置页号为1
+            this.searchMap.pageNo = 1;
 
             this.search();
         },
@@ -79,6 +96,16 @@ var app = new Vue({
                         startPageNo = endPageNo - totalShowPages + 1;
                     }
                 }
+            }
+
+            this.frontDot = false;
+            if (startPageNo > 1) {
+                this.frontDot = true;
+            }
+
+            this.backDot = false;
+            if (endPageNo < this.resultMap.totalPages) {
+                this.backDot = true;
             }
 
 
