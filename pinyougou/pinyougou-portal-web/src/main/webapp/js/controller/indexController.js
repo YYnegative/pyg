@@ -2,7 +2,9 @@ var app = new Vue({
     el:"#app",
     data:{
         //广告数据
-        contentData:{1:[]}
+        contentData:{1:[]},
+        //搜索关键字
+        keywords:""
     },
     methods: {
         //根据内容分类id查询内容列表
@@ -11,6 +13,11 @@ var app = new Vue({
                 //内容列表
                 app.contentData[categoryId] = response.data;
             });
+
+        },
+        //跳转到搜索系统
+        search: function () {
+            location.href = "http://search.pinyougou.com/search.html?keywords=" + this.keywords;
 
         }
     },

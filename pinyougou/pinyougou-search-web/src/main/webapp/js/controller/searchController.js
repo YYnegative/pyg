@@ -123,9 +123,16 @@ var app = new Vue({
                 this.pageNoList.push(i);
             }
 
+        },
+        //根据参数名字获取参数
+        getParameterByName: function (name) {
+            return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
         }
     },
     created(){
+        //获取搜索关键字
+        this.searchMap.keywords = this.getParameterByName("keywords");
+
         this.search();
     }
 });
