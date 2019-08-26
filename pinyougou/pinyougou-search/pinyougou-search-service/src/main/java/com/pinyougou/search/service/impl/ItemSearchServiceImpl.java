@@ -9,11 +9,14 @@ import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
 import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
+import org.elasticsearch.search.sort.SortBuilders;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +56,10 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             String keywords = searchMap.get("keywords")+"";
             if (StringUtils.isNotBlank(keywords)) {
                 //根据搜索关键字查询；参数1：用户输入的关键字，参数2：要在es的哪些域中查询
-                queryBuilder.withQuery(QueryBuilders.multiMatchQuery(keywords, "title", "category", "seller", "brand"));
+                //默认情况下，搜索的时候会根据搜索关键字分词之后 或者 关系查询结果，可以修改为 并列
+                queryBuilder.withQuery(
+                        QueryBuilders.multiMatchQuery(keywords, "title", "category", "seller", "brand")
+                                .operator(Operator.AND));
 
 
                 //设置高亮域
@@ -128,6 +134,13 @@ public class ItemSearchServiceImpl implements ItemSearchService {
         PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize);
 
         queryBuilder.withPageable(pageRequest);
+
+        //处理排序
+        String sortField = searchMap.get("sortField")+"";
+        String sortOrder = searchMap.get("sortOrder")+"";
+        if (StringUtils.isNotBlank(sortField) && StringUtils.isNotBlank(sortOrder)) {
+            queryBuilder.withSort(SortBuilders.fieldSort(sortField).order("DESC".equals(sortOrder)? SortOrder.DESC:SortOrder.ASC));
+        }
 
         //创建查询条件对象
         NativeSearchQuery query = queryBuilder.build();
