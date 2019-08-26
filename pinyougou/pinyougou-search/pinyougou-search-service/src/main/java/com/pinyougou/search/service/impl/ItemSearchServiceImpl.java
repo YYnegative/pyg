@@ -5,8 +5,10 @@ import com.alibaba.fastjson.JSON;
 import com.pinyougou.pojo.TbItem;
 import com.pinyougou.search.service.ItemSearchService;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.lucene.search.join.ScoreMode;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.common.text.Text;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -64,6 +66,33 @@ public class ItemSearchServiceImpl implements ItemSearchService {
                 //设置高亮域
                 queryBuilder.withHighlightFields(highlightField);
             }
+
+            BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+            //分类
+            String category = searchMap.get("category")+"";
+            if (StringUtils.isNotBlank(category)) {
+                boolQueryBuilder.must(QueryBuilders.termQuery("category", category));
+            }
+
+            //品牌
+            String brand = searchMap.get("brand")+"";
+            if (StringUtils.isNotBlank(brand)) {
+                boolQueryBuilder.must(QueryBuilders.termQuery("brand", brand));
+            }
+
+            //规格
+            if (searchMap.get("spec") != null) {
+                Map<String, String> map = (Map<String, String>) searchMap.get("spec");
+                for (Map.Entry<String, String> entry : map.entrySet()) {
+                    //嵌套域的域名称
+                    String key = "specMap." + entry.getKey() + ".keyword";
+                    boolQueryBuilder.must(QueryBuilders.nestedQuery("specMap",
+                            QueryBuilders.matchQuery(key,entry.getValue()), ScoreMode.Max));
+                }
+            }
+
+            queryBuilder.withFilter(boolQueryBuilder);
         }
 
         //创建查询条件对象
