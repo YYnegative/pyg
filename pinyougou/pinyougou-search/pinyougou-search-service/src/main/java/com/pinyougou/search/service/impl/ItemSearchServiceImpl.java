@@ -15,6 +15,7 @@ import org.elasticsearch.search.SearchHits;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightField;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.SearchResultMapper;
@@ -111,6 +112,23 @@ public class ItemSearchServiceImpl implements ItemSearchService {
             queryBuilder.withFilter(boolQueryBuilder);
         }
 
+        //设置分页
+        int pageNo = 1;
+        int pageSize = 10;
+        String pageNoStr = searchMap.get("pageNo")+"";
+        if (StringUtils.isNotBlank(pageNoStr)) {
+            pageNo = Integer.parseInt(pageNoStr);
+        }
+        String pageSizeStr = searchMap.get("pageSize")+"";
+        if (StringUtils.isNotBlank(pageSizeStr)) {
+            pageSize = Integer.parseInt(pageSizeStr);
+        }
+
+        //创建分页信息对象
+        PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize);
+
+        queryBuilder.withPageable(pageRequest);
+
         //创建查询条件对象
         NativeSearchQuery query = queryBuilder.build();
         //搜索
@@ -157,6 +175,10 @@ public class ItemSearchServiceImpl implements ItemSearchService {
 
         //商品列表
         resultMap.put("itemList", aggregatedPage.getContent());
+        //总记录数
+        resultMap.put("total", aggregatedPage.getTotalElements());
+        //总页数
+        resultMap.put("totalPages", aggregatedPage.getTotalPages());
 
         return resultMap;
     }
