@@ -44,7 +44,7 @@ public class Consumer1 {
 		// 7.接受消息
 		// 参数表示接受消息等待的时间，单位是毫秒
 		while (true) {
-			Message message = consumer.receive(200000l);
+			Message message = consumer.receive(200000L);
 
 			// 判断消息类型是TextMessage
 			if (message instanceof TextMessage) {
