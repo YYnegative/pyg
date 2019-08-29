@@ -26,4 +26,9 @@
         <constructor-arg value="pinyougou_item_es_queue"/>
     </bean>
 
+    <!--删除商品同步搜索系统的队列 -->
+    <bean id="itemEsDeleteQueue" class="org.apache.activemq.command.ActiveMQQueue">
+        <constructor-arg value="pinyougou_item_es_delete_queue"/>
+    </bean>
+
 </beans>

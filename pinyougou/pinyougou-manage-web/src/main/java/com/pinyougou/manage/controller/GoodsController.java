@@ -15,10 +15,7 @@ import org.springframework.jms.core.MessageCreator;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.Session;
-import javax.jms.TextMessage;
+import javax.jms.*;
 import java.util.List;
 
 @RequestMapping("/goods")
@@ -33,6 +30,9 @@ public class GoodsController {
 
    @Autowired
    private ActiveMQQueue itemEsQueue;
+
+   @Autowired
+   private ActiveMQQueue itemEsDeleteQueue;
 
     /**
      * 批量修改商品审核状态
@@ -133,6 +133,14 @@ public class GoodsController {
             goodsService.deleteGoodsByIds(ids);
             //同步更新搜索系统
             //itemSearchService.deleteByGoodsIds(ids);
+            jmsTemplate.send(itemEsDeleteQueue, new MessageCreator() {
+                @Override
+                public Message createMessage(Session session) throws JMSException {
+                    ObjectMessage objectMessage = session.createObjectMessage();
+                    objectMessage.setObject(ids);
+                    return objectMessage;
+                }
+            });
             return Result.ok("删除成功");
         } catch (Exception e) {
             e.printStackTrace();
