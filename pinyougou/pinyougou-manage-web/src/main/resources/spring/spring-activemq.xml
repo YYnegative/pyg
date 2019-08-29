@@ -31,4 +31,14 @@
         <constructor-arg value="pinyougou_item_es_delete_queue"/>
     </bean>
 
+    <!--审核通过的主题 -->
+    <bean id="itemTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="pinyougou_item_topic"/>
+    </bean>
+
+    <!--删除商品的主题 -->
+    <bean id="itemDeleteTopic" class="org.apache.activemq.command.ActiveMQTopic">
+        <constructor-arg value="pinyougou_item_delete_topic"/>
+    </bean>
+
 </beans>
