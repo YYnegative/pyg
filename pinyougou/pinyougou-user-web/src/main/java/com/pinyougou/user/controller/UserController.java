@@ -48,12 +48,16 @@ public class UserController {
     @PostMapping("/add")
     public Result add(@RequestParam(required = false)String smsCode, @RequestBody TbUser user){
         try {
-            user.setPassword(DigestUtils.md5Hex(user.getPassword()));
-            user.setCreated(new Date());
-            user.setUpdated(user.getCreated());
-            userService.add(user);
+            if (userService.checkSmsCode(user.getPhone(), smsCode)) {
+                user.setPassword(DigestUtils.md5Hex(user.getPassword()));
+                user.setCreated(new Date());
+                user.setUpdated(user.getCreated());
+                userService.add(user);
 
-            return Result.ok("注册成功");
+                return Result.ok("注册成功");
+            } else {
+                return Result.ok("验证码输入错误；注册失败！");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
