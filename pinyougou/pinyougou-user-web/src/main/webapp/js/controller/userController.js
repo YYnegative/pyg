@@ -36,7 +36,7 @@ var app = new Vue({
                 return;
             }
 
-            axios.get("user/sendSmsCode.do?phone=" + this.entity.phone).success(function (response) {
+            axios.get("user/sendSmsCode.do?phone=" + this.entity.phone).then(function (response) {
                 alert(response.data.message);
             });
         }
