@@ -2,6 +2,7 @@ package cn.itcast.springboot;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ImportResource;
 
 /**
  * 如果是一个spring boot工程则必定有一个启动引导类
