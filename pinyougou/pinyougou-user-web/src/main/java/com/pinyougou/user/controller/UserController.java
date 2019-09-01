@@ -7,9 +7,12 @@ import com.pinyougou.pojo.TbUser;
 import com.pinyougou.user.service.UserService;
 import com.pinyougou.vo.Result;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.PatternSyntaxException;
 
 @RequestMapping("/user")
@@ -18,6 +21,21 @@ public class UserController {
 
     @Reference
     private UserService userService;
+
+    /**
+     * 获取当前登录用户名
+     * @return 用户名
+     */
+    @GetMapping("/getUsername")
+    public Map<String, Object> getUsername(){
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Map<String, Object> map = new HashMap<>();
+        //根据用户名查询该用户的其它信息
+
+        map.put("username", username);
+        return map;
+    }
+
 
     /**
      * 发送短信验证码
