@@ -57,7 +57,8 @@ public class CartController {
                 String cartListJsonStr = JSON.toJSONString(newCartList);
                 CookieUtils.setCookie(request, response, COOKIE_CART_LIST, cartListJsonStr, COOKIE_CART_LIST_MAX_AGE, true);
             } else {
-                //3、已登录- 将最新的购物车保存到cookie
+                //3、已登录- 将最新的购物车保存到redis
+                cartService.saveCartListInRedisByUsername(newCartList, username);
             }
             //4、返回操作结果
             return Result.ok("加入购物车成功！");
@@ -88,7 +89,8 @@ public class CartController {
             }
         } else {
             //已登录- 从redis中获取购物车
-            return null;
+            List<Cart> redisCartList = cartService.findCartListInRedisByUsername(username);
+            return redisCartList;
         }
     }
 
