@@ -155,8 +155,8 @@
 					</div>
 					<div class="step-cont">
 						<ul class="payType">
-							<li class="selected">微信付款<span title="点击取消选择"></span></li>
-							<li>货到付款<span title="点击取消选择"></span></li>
+							<li @click="order.paymentType=1" :class="order.paymentType==1?'selected':''">微信付款<span title="点击取消选择"></span></li>
+							<li @click="order.paymentType=2" :class="order.paymentType==2?'selected':''">货到付款<span title="点击取消选择"></span></li>
 						</ul>
 					</div>
 					<div class="hr"></div>
@@ -374,7 +374,6 @@
 <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="js/plugins/jquery.easing/jquery.easing.min.js"></script>
 <script type="text/javascript" src="js/plugins/sui/sui.min.js"></script>
-<script type="text/javascript" src="components/ui-modules/nav/nav-portal-top.js"></script>
 <script type="text/javascript" src="js/pages/getOrderInfo.js"></script>
 <script type="text/javascript" src="js/controller/orderInfoController.js"></script>
 </body>

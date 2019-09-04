@@ -9,7 +9,9 @@ var app = new Vue({
         //地址列表
         addressList:[],
         //当前选择的地址
-        selectedAddress:{"id":0}
+        selectedAddress:{"id":0},
+        //订单对象；默认微信支付
+        order:{"paymentType":1}
     },
     methods: {
         //选择地址
