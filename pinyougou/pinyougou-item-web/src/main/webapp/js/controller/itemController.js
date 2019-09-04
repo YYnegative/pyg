@@ -60,6 +60,7 @@ var app = new Vue({
         },
         //添加到购物车
         addToCart: function () {
+            //withCredentials 允许携带cookie
             axios.get("http://cart.pinyougou.com/cart/addItemToCartList.do?itemId="
                 + this.sku.id + "&num=" + this.num, {"withCredentials": true})
                 .then(function (response) {

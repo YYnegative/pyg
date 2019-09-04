@@ -9,6 +9,7 @@ import com.pinyougou.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,13 +40,21 @@ public class CartController {
 
     /**
      * 将购买的商品和数量加入到购物车列表
+     * CrossOrigin 允许那些站点跨域；origins允许的站点，allowCredentials允许接收的凭证
      * @param itemId 商品sku id
      * @param num 购买数量
      * @return 操作结果
      */
+    @CrossOrigin(origins = "http://item.pinyougou.com", allowCredentials = "true")
     @GetMapping("/addItemToCartList")
     public Result addItemToCartList(Long itemId, Integer num){
         try {
+            //解决跨域
+            //允许接收cookie信息
+            //response.setHeader("Access-Control-Allow-Credentials", "true");
+            //允许跨域的站点
+            //response.setHeader("Access-Control-Allow-Origin", "http://item.pinyougou.com");
+
             //1、获取购物车列表；
             List<Cart> cartList = findCartList();
             //2、调用业务往购物车列表中添加购买的商品和数量
