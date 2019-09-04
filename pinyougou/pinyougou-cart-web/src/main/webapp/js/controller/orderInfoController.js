@@ -76,7 +76,7 @@ var app = new Vue({
     created(){
         this.getUsername();
         //查询购物车列表
-        //this.findCartList();
+        this.findCartList();
         //加载当前登录用户的收件人地址
         this.findAddressList();
     }
