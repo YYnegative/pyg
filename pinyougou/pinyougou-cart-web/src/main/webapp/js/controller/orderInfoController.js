@@ -14,6 +14,27 @@ var app = new Vue({
         order:{"paymentType":1}
     },
     methods: {
+        //提交订单
+        submitOrder:function(){
+            //设置收件人地址到提交的订单对象中
+            this.order.receiver = this.selectedAddress.contact;
+            this.order.receiverMobile = this.selectedAddress.mobile;
+            this.order.receiverAreaName = this.selectedAddress.address;
+            axios.post("order/add.do", this.order).then(function (response) {
+                if(response.data.success){
+                    //如果是微信付款则跳转到支付页面
+                    if (app.order.paymentType == 1) {
+                        location.href = "pay.html?outTradeNo=" + response.data.message;
+                    } else {
+                        //如果是货到付款则跳转到支付成功页面
+                        location.href="paysuccess.html";
+                    }
+
+                } else {
+                    alert(response.data.message);
+                }
+            });
+        },
         //选择地址
         selectAddress: function(address){
             this.selectedAddress = address;

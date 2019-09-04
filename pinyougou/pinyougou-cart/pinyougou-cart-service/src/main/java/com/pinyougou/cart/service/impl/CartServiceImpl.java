@@ -124,6 +124,7 @@ public class CartServiceImpl implements CartService {
      */
     private TbOrderItem createOrderItem(TbItem item, Integer num) {
         TbOrderItem orderItem = new TbOrderItem();
+        orderItem.setSellerId(item.getSellerId());
         orderItem.setGoodsId(item.getGoodsId());
         orderItem.setItemId(item.getId());
         orderItem.setNum(num);
