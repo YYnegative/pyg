@@ -146,4 +146,9 @@ public class OrderServiceImpl extends BaseServiceImpl<TbOrder> implements OrderS
         return outTradeNo;
     }
 
+    @Override
+    public TbPayLog findPayLogByOutTradeNo(String outTradeNo) {
+        return payLogMapper.selectByPrimaryKey(outTradeNo);
+    }
+
 }
