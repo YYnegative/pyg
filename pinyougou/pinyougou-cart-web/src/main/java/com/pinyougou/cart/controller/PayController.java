@@ -34,7 +34,7 @@ public class PayController {
 
             if (payLog != null) {
                 //调用支付系统 统一下单 方法
-                return payService.createNative(outTradeNo, payLog.getTotalFee());
+                return payService.createNative(outTradeNo, payLog.getTotalFee()+"");
             }
         } catch (Exception e) {
             e.printStackTrace();

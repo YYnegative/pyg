@@ -9,5 +9,5 @@ public interface PayService {
      * @param totalFee 支付总金额
      * @return 统一下单的结果（交易编号，操作结果，总金额，支付二维码链接地址）
      */
-    Map<String, String> createNative(String outTradeNo, Long totalFee);
+    Map<String, String> createNative(String outTradeNo, String totalFee);
 }

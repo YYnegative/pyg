@@ -11,12 +11,12 @@ var app = new Vue({
         //生成支付二维码
         createNative: function () {
             //1、接收参数
-            this.outTradeNo = getParameterByName("outTradeNo");
+            this.outTradeNo = this.getParameterByName("outTradeNo");
             //2、发送请求
             axios.get("pay/createNative.do?outTradeNo=" + this.outTradeNo + "&r=" + Math.random()).then(function (response) {
                 if ("SUCCESS" == response.data.result_code) {
                     //下单成功
-                    app.totalFee = (response.data.totalFee/100).toFixed(2);
+                    app.totalFee = (response.data.totalFee/100);
                     //3、生成二维码
                     var qr = new QRious({
                         //要渲染生成二维码图片的元素
