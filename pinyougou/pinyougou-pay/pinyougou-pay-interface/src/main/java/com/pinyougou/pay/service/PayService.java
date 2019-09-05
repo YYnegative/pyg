@@ -10,4 +10,11 @@ public interface PayService {
      * @return 统一下单的结果（交易编号，操作结果，总金额，支付二维码链接地址）
      */
     Map<String, String> createNative(String outTradeNo, String totalFee);
+
+    /**
+     * 根据交易编号查询支付状态
+     * @param outTradeNo 交易编号
+     * @return 查询结果
+     */
+    Map<String, String> queryPayStatus(String outTradeNo);
 }
