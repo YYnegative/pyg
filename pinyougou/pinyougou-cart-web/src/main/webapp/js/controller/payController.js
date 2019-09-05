@@ -15,8 +15,14 @@ var app = new Vue({
                     //支付成功跳转到支付成功页面
                     location.href = "paysuccess.html?totalFee=" + app.totalFee;
                 } else {
-                    //跳转到支付失败
-                    location.href = "payfail.html";
+                    if("支付超时"==response.data.message){
+                        //重新生成二维码
+                        //alert(response.data.message);
+                        app.createNative();
+                    } else {
+                        //跳转到支付失败
+                        location.href = "payfail.html";
+                    }
                 }
             });
         },

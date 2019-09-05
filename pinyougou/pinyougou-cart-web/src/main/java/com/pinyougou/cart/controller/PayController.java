@@ -53,6 +53,8 @@ public class PayController {
     public Result queryPayStatus(String outTradeNo){
         Result result = Result.fail("查询支付状态失败");
         try {
+            //3分钟内未支付则返回支付超时
+            int count = 0;
             while(true) {
                 //1. 每隔3秒调用支付系统业务方法查询支付状态；
                 Map<String, String> map = payService.queryPayStatus(outTradeNo);
@@ -64,6 +66,12 @@ public class PayController {
                     //支付成功；更新状态
                     orderService.updateOrderStatus(outTradeNo, map.get("transaction_id"));
                     result = Result.ok("支付成功");
+                    break;
+                }
+                count++;
+                if (count > 60) {
+                    //已经超时
+                    result = Result.fail("支付超时");
                     break;
                 }
                 //睡眠3秒
