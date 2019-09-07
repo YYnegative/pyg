@@ -16,4 +16,9 @@ public interface SeckillGoodsService extends BaseService<TbSeckillGoods> {
      */
     PageInfo<TbSeckillGoods> search(Integer pageNum, Integer pageSize, TbSeckillGoods seckillGoods);
 
+    /**
+     * 查询库存大于0，已审核，开始时间小于等于当前时间，结束时间大于当前时间的秒杀商品
+     * @return 秒杀商品列表
+     */
+    List<TbSeckillGoods> findList();
 }

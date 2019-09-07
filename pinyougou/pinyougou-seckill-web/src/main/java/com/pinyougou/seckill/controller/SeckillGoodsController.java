@@ -7,6 +7,8 @@ import com.pinyougou.seckill.service.SeckillGoodsService;
 import com.pinyougou.vo.Result;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequestMapping("/seckillGoods")
 @RestController
 public class SeckillGoodsController {
@@ -15,12 +17,23 @@ public class SeckillGoodsController {
     private SeckillGoodsService seckillGoodsService;
 
     /**
+     * 查询库存大于0，已审核，开始时间小于等于当前时间，结束时间大于当前时间的秒杀商品
+     * @return 秒杀商品列表
+     */
+    @GetMapping("/findList")
+    public List<TbSeckillGoods> findList(){
+        return seckillGoodsService.findList();
+    }
+
+
+    /**
      * 新增
      * @param seckillGoods 实体
      * @return 操作结果
      */
     @PostMapping("/add")
-    public Result add(@RequestBody TbSeckillGoods seckillGoods){
+
+    public Result add(@RequestBody TbSeckillGoods seckillGoods) {
         try {
             seckillGoodsService.add(seckillGoods);
 
@@ -33,21 +46,23 @@ public class SeckillGoodsController {
 
     /**
      * 根据主键查询
+     *
      * @param id 主键
      * @return 实体
      */
     @GetMapping("/findOne/{id}")
-    public TbSeckillGoods findOne(@PathVariable Long id){
+    public TbSeckillGoods findOne(@PathVariable Long id) {
         return seckillGoodsService.findOne(id);
     }
 
     /**
      * 修改
+     *
      * @param seckillGoods 实体
      * @return 操作结果
      */
     @PostMapping("/update")
-    public Result update(@RequestBody TbSeckillGoods seckillGoods){
+    public Result update(@RequestBody TbSeckillGoods seckillGoods) {
         try {
             seckillGoodsService.update(seckillGoods);
             return Result.ok("修改成功");
@@ -59,11 +74,12 @@ public class SeckillGoodsController {
 
     /**
      * 根据主键数组批量删除
+     *
      * @param ids 主键数组
      * @return 实体
      */
     @GetMapping("/delete")
-    public Result delete(Long[] ids){
+    public Result delete(Long[] ids) {
         try {
             seckillGoodsService.deleteByIds(ids);
             return Result.ok("删除成功");
@@ -75,15 +91,16 @@ public class SeckillGoodsController {
 
     /**
      * 根据条件搜索
-     * @param pageNum 页号
-     * @param pageSize 页面大小
+     *
+     * @param pageNum      页号
+     * @param pageSize     页面大小
      * @param seckillGoods 搜索条件
      * @return 分页信息
      */
     @PostMapping("/search")
     public PageInfo<TbSeckillGoods> search(@RequestParam(value = "pageNum", required = false, defaultValue = "1") Integer pageNum,
-                             @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
-                           @RequestBody TbSeckillGoods seckillGoods) {
+                                           @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
+                                           @RequestBody TbSeckillGoods seckillGoods) {
         return seckillGoodsService.search(pageNum, pageSize, seckillGoods);
     }
 
