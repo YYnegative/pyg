@@ -75,6 +75,19 @@ public class PayController {
                 if (count > 20) {
                     //已经超时
                     result = Result.fail("支付超时");
+
+                    //关闭订单
+                    map = payService.closeOrder(outTradeNo);
+                    if (map != null && "ORDERPAID".equals(map.get("err_code"))) {
+                        //在关闭订单的过程中被用户支付了
+                        orderService.saveSeckillOrderInRedisToDb(outTradeNo, map.get("transaction_id"));
+                        result = Result.ok("支付成功");
+                        break;
+                    }
+
+                    //将redis中的订单删除并更新库存
+                    orderService.deleteSeckillOrderInRedis(outTradeNo);
+
                     break;
                 }
                 //睡眠3秒

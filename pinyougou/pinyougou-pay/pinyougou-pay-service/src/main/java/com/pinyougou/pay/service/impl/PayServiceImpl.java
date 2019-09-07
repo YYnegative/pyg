@@ -111,4 +111,43 @@ public class PayServiceImpl implements PayService {
         }
         return null;
     }
+
+    @Override
+    public Map<String, String> closeOrder(String outTradeNo) {
+        try {
+            //1. 组装微信统一下单需要的数据；
+            Map<String, String> paramMap = new HashMap<>();
+            //公众账号ID
+            paramMap.put("appid", appid);
+            //商户号
+            paramMap.put("mch_id", partner);
+            //随机字符串；可以由微信工具类获取
+            paramMap.put("nonce_str", WXPayUtil.generateNonceStr());
+            //签名；在转换为xml的时候可以指定自动生成
+            //paramMap.put("sign", "");
+            //商户订单号
+            paramMap.put("out_trade_no", outTradeNo);
+
+            //将上述的map转换为xml
+            String signedXml = WXPayUtil.generateSignedXml(paramMap, partnerkey);
+            System.out.println("发送到 关闭订单 的内容为：" + signedXml);
+
+            //2. 创建HttpClient发送请求
+            HttpClient httpClient = new HttpClient("https://api.mch.weixin.qq.com/pay/closeorder");
+            httpClient.setHttps(true);
+            httpClient.setXmlParam(signedXml);
+            httpClient.post();
+
+            //3. 处理返回结果
+            String content = httpClient.getContent();
+            System.out.println("发送到 关闭订单 的返回结果为：" + content);
+
+            //将返回结果转化为map
+            return WXPayUtil.xmlToMap(content);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 }
