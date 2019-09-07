@@ -27,6 +27,8 @@
         <module>pinyougou-cart-web</module>
         <module>pinyougou-order</module>
         <module>pinyougou-pay</module>
+        <module>pinyougou-seckill</module>
+        <module>pinyougou-seckill-web</module>
     </modules>
 
     <description>父工程锁定依赖、插件等的版本</description>
