@@ -5,9 +5,12 @@ import com.github.pagehelper.PageInfo;
 import com.pinyougou.pojo.TbSeckillGoods;
 import com.pinyougou.seckill.service.SeckillGoodsService;
 import com.pinyougou.vo.Result;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RequestMapping("/seckillGoods")
 @RestController
@@ -103,6 +106,18 @@ public class SeckillGoodsController {
                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") Integer pageSize,
                                            @RequestBody TbSeckillGoods seckillGoods) {
         return seckillGoodsService.search(pageNum, pageSize, seckillGoods);
+    }
+    /**
+     * 获取当前登录的用户信息
+     * @return 用户信息
+     */
+    @GetMapping("/getUsername")
+    public Map<String, Object> getUsername(){
+        Map<String, Object> map = new HashMap<>();
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        map.put("username", username);
+
+        return map;
     }
 
 }

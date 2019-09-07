@@ -15,11 +15,12 @@ http://www.springframework.org/schema/security/spring-security.xsd">
     <http pattern="/js/**" security="none"/>
     <http pattern="/plugins/**" security="none"/>
     <http pattern="/seckill-*.html" security="none"/>
-    <http pattern="/seckillGoods/**" security="none"/>
+
 
     <!-- entry-point-ref 入口点引用  -->
     <http use-expressions="false" entry-point-ref="casProcessingFilterEntryPoint">
         <!--匿名可访问；如果是没有登录则用户名为 anonymousUser-->
+        <intercept-url pattern="/seckillGoods/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
         <intercept-url pattern="/seckillOrder/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
 
         <intercept-url pattern="/**" access="ROLE_USER"/>
