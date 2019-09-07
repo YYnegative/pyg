@@ -21,4 +21,11 @@ public interface SeckillGoodsService extends BaseService<TbSeckillGoods> {
      * @return 秒杀商品列表
      */
     List<TbSeckillGoods> findList();
+
+    /**
+     * 根据秒杀商品id从redis查询秒杀商品
+     * @param id 秒杀商品ID
+     * @return 秒杀商品
+     */
+    TbSeckillGoods findOneInRedisById(Long id);
 }
